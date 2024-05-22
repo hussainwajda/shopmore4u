@@ -1,0 +1,86 @@
+/* Ensure the carousel fills the container */
+.poster-carousel {
+  position: relative;
+  width: 100%;
+  height: 80vh;
+  min-height: 300px;
+}
+
+/* Center the control buttons vertically and position them absolutely */
+.carousel-control-prev,
+.carousel-control-next {
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 1; /* Ensure controls are above the images */
+}
+
+/* Adjust the size and appearance of the control buttons */
+.carousel-control-prev,
+.carousel-control-next {
+  width: 5%;
+}
+
+.carousel-control-prev-icon,
+.carousel-control-next-icon {
+  height: 50px; /* Adjust control button height */
+  width: 50px; /* Adjust control button width */
+  background-size: 50px 50px; /* Adjust background size for larger buttons */
+}
+
+/* Hide the default indicators */
+.carousel-indicators {
+  display: none;
+}
+.overlay-component {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  margin-bottom: 60px;
+  color: rgb(0, 0, 0);
+  padding: 20px;
+}
+
+@media (max-width: 1500px) {
+  .overlay-component {
+    margin-bottom: -70px;
+  }
+  .poster-carousel {
+    position: relative;
+    width: 100%;
+    height: 35vh;
+    min-height: 300px;
+  }
+}
+@media (max-width: 1200px) {
+  .overlay-component {
+    margin-bottom: 40px;
+  }
+  .poster-carousel {
+    position: relative;
+    width: 100%;
+    height: 35vh;
+    min-height: 300px;
+  }
+}
+
+@media (max-width: 900px) {
+  .overlay-component {
+    display: none;
+  }
+  .poster-carousel {
+    position: relative;
+    width: 100%;
+    height: 25vh;
+    min-height: 300px;
+  }
+}
+
+@media (max-width: 500px) {
+  .poster-carousel {
+    position: relative;
+    width: 100%;
+    height: 20vh;
+    min-height: 300px;
+  }
+}
