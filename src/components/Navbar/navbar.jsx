@@ -11,11 +11,13 @@ import getUserName from './getUsername'; // Adjust the import path accordingly
 const Navbar = () => {
   const [activeNavItem, setActiveNavItem] = useState(null);
   const [username, setUsername] = useState('');
+  const [IsAdmin, setIsAdmin] = useState(false);
+  const [isNavCollapsed, setIsNavCollapsed] = useState(true);
   const searchBarRef = useRef(null);
   const navigate = useNavigate();
 
   const [user, setUser] = useState(null);
-
+  const adminEmail = "arbaz99199@gmail.com";
   useEffect(() => {
     const unsubscribe = firebase.auth().onAuthStateChanged(async (user) => {
       if (user) {
@@ -23,12 +25,19 @@ const Navbar = () => {
         try {
           const fetchedUsername = await getUserName();
           setUsername(fetchedUsername);
+
+          if (user.email === adminEmail) {
+            setIsAdmin(true);
+          } else {
+            setIsAdmin(false);
+          }
         } catch (error) {
           console.error('Error fetching username:', error.message);
         }
       } else {
         setUser(null);
-        setUsername(''); // Clear username if user is logged out
+        setUsername('');
+        setIsAdmin(false); // Clear username if user is logged out
       }
     });
 
@@ -59,11 +68,15 @@ const Navbar = () => {
     }
   };
 
+  const handleNavCollapse = () => {
+    setIsNavCollapsed(!isNavCollapsed);
+  };
+
   return (
     <>
       <div className="navbar" id="navbar1">
-        <div className="navbar-brand" id="nav-logo">
-          {logo && <img width={200} height={100} src={logo} alt="logo" />}
+        <div className="navbar-brand">
+          {logo && <img id='nav-logo' src={logo} alt="logo" />}
         </div>
         <div className="d-none d-sm-block col-md-6 form-group top_search">
           <form action="" method="post" className="form-inline">
@@ -135,11 +148,11 @@ const Navbar = () => {
           <div className="container">
             <div className="row justify-content-center">
               <div className="col-lg-12">
-                <button className="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <button className="navbar-toggler" type="button" onClick={handleNavCollapse} aria-controls="navbarSupportedContent" aria-expanded={!isNavCollapsed} aria-label="Toggle navigation">
                   <span className="navbar-toggler-icon"></span>
                 </button>
 
-                <div className="collapse navbar-collapse" id="navbarSupportedContent">
+                <div className={`collapse navbar-collapse ${!isNavCollapsed ? 'show' : ''}`} id="navbarSupportedContent">
                   <ul className="navbar-nav ml-auto">
                     <li className={`nav-item ${activeNavItem === null ? 'active' : ''}`}>
                       <NavLink to="/" className='nav-link'>Home</NavLink>
@@ -147,15 +160,20 @@ const Navbar = () => {
                     <li className={`nav-item ${activeNavItem === 'categories' ? 'active' : ''}`} onClick={() => handleCategoriesClick(400)}>
                       <p className='nav-link'>Categories</p>
                     </li>
-                    <li className={`nav-item ${activeNavItem === 'about' ? 'active' : ''}`}>
+                    {username && (<li className={`nav-item ${activeNavItem === 'about' ? 'active' : ''}`}>
                       <NavLink to="/admin/controller" className='nav-link' activeClassName="active">Admin Panel</NavLink>
-                    </li>
+                    </li>)}
                     <li className={`nav-item ${activeNavItem === 'search' ? 'active' : ''}`} onClick={handleSearchClick}>
                       <p className='nav-link'>Search</p>
                     </li>
                     <li className={`nav-item ${activeNavItem === 'contact' ? 'active' : ''}`}>
                       <NavLink to="/contact" className='nav-link' activeClassName="activeNavLink">Contact</NavLink>
                     </li>
+                    {IsAdmin && (
+                      <li className={`nav-item ${activeNavItem === 'admin' ? 'active' : ''}`}>
+                        <NavLink to="/admin/register" className='nav-link' activeClassName="active">Register New User</NavLink>
+                      </li>
+                    )}
                   </ul>
                 </div>
               </div>
@@ -163,7 +181,6 @@ const Navbar = () => {
           </div>
         </nav>
       </div>
-      <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
     </>
   )
 }

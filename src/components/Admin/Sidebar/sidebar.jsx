@@ -4,6 +4,7 @@ import logo from '../../Assets/logo.png'; // Update the path to your logo image
 import { Link } from 'react-router-dom';
 import NewDeal from '../NewDeal';
 import AmazonLinks from '../AmazonLinks';
+import firebase from '../../firebaseInit'; 
 
 const Sidebar = () => {
   const [startAnimate, setStartAnimate] = useState(false);
@@ -11,6 +12,9 @@ const Sidebar = () => {
   const [currCount, setCurrCount] = useState(0);
   const [isOpen, setIsOpen] = useState(false);
   const [activeTab, setActiveTab] = useState(0); // State to manage the active tab content
+  const [isAdmin, setIsAdmin] = useState(false);
+  const adminEmail = "arbaz99199@gmail.com";
+
 
   const onClickTab = (count) => {
     setStartAnimate(false);
@@ -27,6 +31,16 @@ const Sidebar = () => {
     setTimeout(() => {
       setStartAnimate(true);
     }, 500);
+
+    const unsubscribe = firebase.auth().onAuthStateChanged((user) => {
+      if (user && user.email === adminEmail) {
+        setIsAdmin(true);
+      } else {
+        setIsAdmin(false);
+      }
+    });
+
+    return () => unsubscribe(); 
   }, []);
 
   const toggleSidebar = () => {
@@ -41,11 +55,13 @@ const Sidebar = () => {
       case 1:
         return <AmazonLinks />;
       case 2:
-        return <div>Content for Other Links</div>;
+        return <div>Coming soon....</div>;
       case 3:
-        return <div>Content for Payment Portal</div>;
+        return <div>Coming soon....</div>;
       case 4:
-        return <div>Content for Earning Report</div>;
+        return <div>Coming soon....</div>;
+      case 5:
+        return isAdmin ? <div>Coming Soon....</div> : null; 
       default:
         return null;
     }
@@ -80,6 +96,11 @@ const Sidebar = () => {
         <a className={currCount === 4 ? 'active' : ''} href="#" onClick={() => onClickTab(4)}>
           <span className={currCount === 4 ? 'text-active' : ''}><i className="fas fa-arrow-right"></i>Earning Report</span>
         </a>
+        {isAdmin && (
+        <a className={currCount === 5 ? 'active' : ''} href="#" onClick={() => onClickTab(5)}>
+          <span className={currCount === 5 ? 'text-active' : ''}><i className="fas fa-arrow-right"></i>Exclusive deals</span>
+        </a>
+      )}
         <Link className={currCount === 5 ? 'active' : ''} to="/" onClick={() => onClickTab(5)}>
           <span className={currCount === 5 ? 'text-active' : ''}><i className="fas fa-arrow-right"></i>Back To Home</span>
         </Link>

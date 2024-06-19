@@ -876,3 +876,73 @@ iframe {
     opacity: 1;
   }
 }
+
+
+/* Overall Container */
+.contact-admin-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh; /* Ensure full viewport height */
+  background: -webkit-linear-gradient(-135deg, #254E70, #8EE3EF);
+  background: -o-linear-gradient(-135deg, #254E70, #8EE3EF);
+  background: -moz-linear-gradient(-135deg, #254E70, #8EE3EF);
+  background: linear-gradient(-135deg, #254E70, #8EE3EF);
+}
+
+/* Content Wrapper */
+.contact-admin-wrapper {
+  text-align: center;
+  background-color: white;
+  padding: 40px;
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  width: 90%; /* Make it responsive to screen width */
+  max-width: 500px; /* Limit maximum width for larger screens */
+}
+
+/* Heading */
+h1 {
+  margin-bottom: 20px;
+}
+
+/* WhatsApp Button */
+.whatsapp-button {
+  background-color: #25d366; /* WhatsApp green */
+  color: white;
+  padding: 15px 25px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 1.1rem;
+  transition: background-color 0.3s;
+}
+
+.whatsapp-button:hover {
+  background-color: #1da851; /* Slightly darker on hover */
+}
+
+/* Login Link */
+.login-link {
+  margin-top: 30px;
+}
+
+.login-link a {
+  color: #333;
+  text-decoration: none;
+}
+
+/* Responsive Adjustments (optional) */
+@media (max-width: 768px) {
+  .contact-admin-wrapper {
+    width: 95%; 
+  }
+
+  h1 {
+    font-size: 1.6rem; /* Adjust font sizes for smaller screens */
+  }
+
+  .whatsapp-button {
+    font-size: 1rem;
+  }
+}

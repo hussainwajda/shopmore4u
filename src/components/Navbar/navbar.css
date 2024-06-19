@@ -29,12 +29,24 @@ body {
         max-width: 300px;
     } */
     #nav-logo{
-        width: 75px;
+        width: 125px;
         height: 75px;
     }
     .nav-login-btn a{
         padding-left: 30px;
     }
+}
+@media screen and (max-width: 1000px){
+  /* .nav-search{
+      max-width: 300px;
+  } */
+  #nav-logo{
+      width: 105px;
+      height: 45px;
+  }
+  .nav-login-btn a{
+      padding-left: 20px;
+  }
 }
 /* .nav-search input{
     width: 600px;
@@ -127,10 +139,35 @@ body {
 #navbar{
     padding-right: 1rem ;
 }
+@media screen and (max-width: 750px){
+  .navbar{
+      padding-right: 2rem ;
+  }
+  #nav-logo{
+    width: 100px;
+    height: 40px;
+}.nav-login-btn a{
+    padding-left: 20px;
+}
+}
 @media screen and (max-width: 500px){
     .navbar{
         padding-right: 2rem ;
     }
+    #nav-logo{
+      width: 100px;
+      height: 40px;
+  }.nav-login-btn a{
+      padding-left: 20px;
+  }
+  .nav-dropdown {
+    padding: 10px;
+    padding-left: 60px;
+  }
+  
+  .nav-dropdown span {
+    font-size: 12px;
+  }
 }
 
 .navbar-brand {

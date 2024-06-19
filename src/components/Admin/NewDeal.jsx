@@ -1,17 +1,53 @@
 import React, { useState } from 'react';
 import { Container, Row, Col, Form, Button, Card } from 'react-bootstrap';
+import axios from 'axios';
+import firebase from '../firebaseInit'; 
 
 function NewDeal() {
-  // ... (component logic remains the same)
-  const [link,setLink] = useState('')
+  const [link, setLink] = useState('');
+  const [shortUrl, setShortUrl] = useState('');
+  const [longUrl, setLongUrl] = useState('');
+  const [affiliateUrl, setAffiliateUrl] = useState('');
+  const [status, setStatus] = useState('N/A');
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    try {
+      setStatus('Generating link...');
+      const idToken = await firebase.auth().currentUser.getIdToken(true);
+      console.log(idToken);
+      const response = await axios.post('http://localhost:5000/generate-link', 
+        { url: link },
+        {
+          headers: {
+            Authorization: `Bearer ${idToken}` 
+          }
+        }
+      );
+      const { shortLink, longLink, affiliateLink } = response.data;
+      setShortUrl(shortLink);
+      setLongUrl(longLink);
+      setAffiliateUrl(affiliateLink);
+      setStatus('Link generated successfully!');
+    } catch (error) {
+      console.error(error);
+      setStatus('Failed to generate link');
+    }
+  };
+
+  const handleCopy = (url) => {
+    navigator.clipboard.writeText(url).then(() => {
+      alert('URL copied to clipboard');
+    });
+  };
 
   return (
     <Container>
       <h2 className="mt-4 mb-4">Link Generator</h2>
-
-      <Card className="p-4 mb-4"> {/* Added spacing below the card */}
+      <Card className="p-4 mb-4">
         <h5 className="mb-3">Important Points:</h5>
-        <ul className="list-unstyled"> {/* Use unstyled list for custom bullets */}
+        <ul className="list-unstyled">
           <li className="mb-2">
             <span className="bullet">&#8226;</span> We have several affiliates including AMZ, Flipkart, Myntra, Nykaa, Ajio, Firstcry, and many others.
           </li>
@@ -26,24 +62,23 @@ function NewDeal() {
           </li>
         </ul>
 
-        <Form.Group className="mb-3 mt-4">
-          <Form.Label>Enter Link:</Form.Label>
-          <Form.Control type="text" value={link} onChange={(e) => setLink(e.target.value)} />
-        </Form.Group>
+        <Form onSubmit={handleSubmit}>
+          <Form.Group className="mb-3 mt-4">
+            <Form.Label>Enter Link:</Form.Label>
+            <Form.Control type="text" value={link} onChange={(e) => setLink(e.target.value)} />
+          </Form.Group>
 
-        <h5 className="mb-2">Status: N/A</h5> 
-
-        <Button className='gnrtlnk' >Generate Link</Button>
+          <h5 className="mb-2">Status: {status}</h5>
+          <Button className="gnrtlnk" type="submit">Generate Link</Button>
+        </Form>
       </Card>
 
-      <div className="d-flex justify-content-center"> {/* Center the buttons */}
-        <Button variant="success" className="me-2">Copy Short URL</Button> 
-        <Button variant="danger">Copy Long URL</Button>
+      <div className="d-flex justify-content-center">
+        <Button variant="success" className="me-2" onClick={() => handleCopy(shortUrl)}>Copy Short URL</Button>
+        <Button variant="danger" onClick={() => handleCopy(longUrl)}>Copy Long URL</Button>
       </div>
 
       <style jsx>{`
-        /* ... (responsive styles) */
-
         .bullet {
           margin-right: 10px; 
         }
@@ -51,11 +86,11 @@ function NewDeal() {
         li {
           line-height: 1.6;  
         }
-        .gnrtlnk{
+        .gnrtlnk {
           background-color: #254E70;
         }
 
-        .gnrtlnk:hover{
+        .gnrtlnk:hover {
           background-color: #62D9D9;
         }
       `}</style>

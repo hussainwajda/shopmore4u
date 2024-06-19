@@ -3,7 +3,7 @@ import './elec.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faShoppingCart, faHeart, faPlus, faExpand } from '@fortawesome/free-solid-svg-icons';
 
-export default function Elec() {
+export default function PopularProducts() {
   return (
     <section class="section-products">
 		<div class="container">

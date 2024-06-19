@@ -159,3 +159,9 @@ a:hover {
     background-color: #444444;
     transform: translateY(-50%);
 }
+
+@media (max-width: 1600px) and (min-width: 900px) {
+    .section-products {
+        margin-top: 200px;
+    }    
+}

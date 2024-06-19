@@ -2,16 +2,21 @@
 
 body {
     
-    color: #444444;
+    color: #ffffff;
 }
 
 .topcat-container {
     font-family: "Poppins", sans-serif;
     margin-top: 50px;
+    color: #000000;
 }
 
 .topcat-row{
     margin-top: 20px;
+}
+
+.category-item p{
+    color: #000000 ;
 }
 
 @media screen and (max-width: 500px){

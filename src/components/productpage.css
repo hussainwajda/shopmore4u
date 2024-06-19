@@ -1,0 +1,79 @@
+/* Product Container */
+.product-container {
+    width: 90%; /* Make it responsive to screen width */
+    max-width: 800px; /* Limit maximum width for larger screens */
+    margin: 0 auto;
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    background-color: #fff; /* Or your preferred background color */
+  }
+  
+  /* Product Content */
+  .product-content {
+    text-align: center; /* Center text within the container */
+  }
+  
+  /* Image and Details Wrapper */
+  .image-details {
+    display: flex;
+    flex-direction: column; /* Stack image and details vertically */
+    align-items: center;
+    margin-bottom: 20px;
+  }
+  
+  /* Product Image */
+  .product-image {
+    max-width: 100%; 
+    height: auto;
+    margin-bottom: 20px;
+  }
+  
+  /* Price and Button Wrapper */
+  .price-button-wrapper {
+    text-align: center;
+    margin-top: 20px;
+  }
+  
+  /* Product Price */
+  .product-price {
+    font-size: 1.2rem;
+    font-weight: bold;
+    margin-bottom: 10px;
+  }
+  
+  /* Shop Now Button */
+  .shop-now-button {
+    background-color: #007bff; /* Or your desired button color */
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: background-color 0.3s;
+  }
+  
+  .shop-now-button:hover {
+    background-color: #0056b3; /* Slightly darker on hover */
+  }
+  
+  
+  /* Responsive Adjustments */
+  @media (min-width: 768px) {
+    .image-details {
+      flex-direction: row; /* Arrange image and details side by side */
+      align-items: flex-start;
+    }
+  
+    .product-image {
+      margin-bottom: 0;
+      margin-right: 20px;
+    }
+  
+    .price-button-wrapper {
+      text-align: left; /* Align price and button to the left */
+    }
+  }
+  

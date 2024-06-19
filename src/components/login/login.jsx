@@ -86,9 +86,9 @@ function Login() {
               <span className="txt1">
                 Forgot
               </span>
-              <a className="txt2" href="#">
+              <Link className="txt2" to="/resetpassword">
                 Username / Password?
-              </a>
+              </Link>
             </div>
             <div className="text-center p-t-136">
               <Link className="txt2" to="/register">
