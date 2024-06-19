@@ -1,17 +1,22 @@
 import React, { useState, useEffect } from 'react';
 import './sidebar.css';
 import logo from '../../Assets/logo.png'; // Update the path to your logo image
+import { Link } from 'react-router-dom';
+import NewDeal from '../NewDeal';
+import AmazonLinks from '../AmazonLinks';
 
 const Sidebar = () => {
   const [startAnimate, setStartAnimate] = useState(false);
   const [highlightTopPosition, setHighlightTopPosition] = useState(150); // Adjust initial position considering the logo height
   const [currCount, setCurrCount] = useState(0);
   const [isOpen, setIsOpen] = useState(false);
+  const [activeTab, setActiveTab] = useState(0); // State to manage the active tab content
 
   const onClickTab = (count) => {
     setStartAnimate(false);
     setCurrCount(count);
     setHighlightTopPosition(150 + count * 52); // Adjust the highlight position considering the logo height
+    setActiveTab(count); // Set the active tab
 
     setTimeout(() => {
       setStartAnimate(true);
@@ -28,8 +33,26 @@ const Sidebar = () => {
     setIsOpen(!isOpen);
   }
 
+  // Content for each tab
+  const renderContent = () => {
+    switch(activeTab) {
+      case 0:
+        return <NewDeal />;
+      case 1:
+        return <AmazonLinks />;
+      case 2:
+        return <div>Content for Other Links</div>;
+      case 3:
+        return <div>Content for Payment Portal</div>;
+      case 4:
+        return <div>Content for Earning Report</div>;
+      default:
+        return null;
+    }
+  }
+
   return (
-    <div className={`sidebar-container ${isOpen ? 'sidebar-open' : ''}`}>
+    <div className="sidebar-container">
       <button className="toggle-btn" onClick={toggleSidebar}>
         ☰
       </button>
@@ -42,21 +65,27 @@ const Sidebar = () => {
           className={`sidebar__highlight ${startAnimate ? 'sidebar__highlight__animate' : ''}`}>
         </div>
 
-        <a className={currCount === 0 ? 'active' : ''} href="#home" onClick={() => onClickTab(0)}>
+        <Link className={currCount === 0 ? 'active' : ''} to="#" onClick={() => onClickTab(0)}>
           <span className={currCount === 0 ? 'text-active' : ''}><i className="fas fa-arrow-right"></i>New Deal</span>
-        </a>
-        <a className={currCount === 1 ? 'active' : ''} href="#news" onClick={() => onClickTab(1)}>
+        </Link>
+        <a className={currCount === 1 ? 'active' : ''} href="#" onClick={() => onClickTab(1)}>
           <span className={currCount === 1 ? 'text-active' : ''}><i className="fas fa-arrow-right"></i>Amazon Links</span>
         </a>
-        <a className={currCount === 2 ? 'active' : ''} href="#contact" onClick={() => onClickTab(2)}>
+        <a className={currCount === 2 ? 'active' : ''} href="#" onClick={() => onClickTab(2)}>
           <span className={currCount === 2 ? 'text-active' : ''}><i className="fas fa-arrow-right"></i>Other Links</span>
         </a>
-        <a className={currCount === 3 ? 'active' : ''} href="#about" onClick={() => onClickTab(3)}>
+        <a className={currCount === 3 ? 'active' : ''} href="#" onClick={() => onClickTab(3)}>
           <span className={currCount === 3 ? 'text-active' : ''}><i className="fas fa-arrow-right"></i>Payment Portal</span>
         </a>
-        <a className={currCount === 3 ? 'active' : ''} href="#about" onClick={() => onClickTab(4)}>
-          <span className={currCount === 3 ? 'text-active' : ''}><i className="fas fa-arrow-right"></i>Earning Report</span>
+        <a className={currCount === 4 ? 'active' : ''} href="#" onClick={() => onClickTab(4)}>
+          <span className={currCount === 4 ? 'text-active' : ''}><i className="fas fa-arrow-right"></i>Earning Report</span>
         </a>
+        <Link className={currCount === 5 ? 'active' : ''} to="/" onClick={() => onClickTab(5)}>
+          <span className={currCount === 5 ? 'text-active' : ''}><i className="fas fa-arrow-right"></i>Back To Home</span>
+        </Link>
+      </div>
+      <div className={`content-container ${isOpen ? 'sidebar-open' : ''}`}>
+        {renderContent()}
       </div>
     </div>
   )

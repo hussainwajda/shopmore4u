@@ -1,34 +1,40 @@
-import React, { useContext, useState, useEffect, useRef } from 'react';
-import { NavLink, Link, useNavigate } from 'react-router-dom'; // Import Link and useNavigate
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'; // Import FontAwesomeIcon
-import { faUser, faHeart, faShoppingCart, faSignOutAlt } from '@fortawesome/free-solid-svg-icons'; // Import icons
-import logo from '../Assets/logo.png'; // Assuming logo path is correct
-import './navbar.css'; // Assuming CSS file exists
-import 'firebase/auth';
+import React, { useState, useEffect, useRef } from 'react';
+import { NavLink, Link, useNavigate } from 'react-router-dom';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faUser, faHeart, faShoppingCart, faSignOutAlt } from '@fortawesome/free-solid-svg-icons';
+import logo from '../Assets/logo.png';
+import './navbar.css';
 import firebase from '../firebaseInit';
-import { auth } from '../firebaseInit'; // Assuming firebaseConfig.js is set up correctly
+import { auth, db } from '../firebaseInit';
+import getUserName from './getUsername'; // Adjust the import path accordingly
 
 const Navbar = () => {
   const [activeNavItem, setActiveNavItem] = useState(null);
+  const [username, setUsername] = useState('');
   const searchBarRef = useRef(null);
-  const navigation = useNavigate();
+  const navigate = useNavigate();
 
-  // Firebase auth state
   const [user, setUser] = useState(null);
 
   useEffect(() => {
-    const unsubscribe = firebase.auth().onAuthStateChanged((user) => {
+    const unsubscribe = firebase.auth().onAuthStateChanged(async (user) => {
       if (user) {
         setUser(user);
+        try {
+          const fetchedUsername = await getUserName();
+          setUsername(fetchedUsername);
+        } catch (error) {
+          console.error('Error fetching username:', error.message);
+        }
       } else {
         setUser(null);
+        setUsername(''); // Clear username if user is logged out
       }
     });
 
     return () => unsubscribe();
   }, []);
 
-  // Navigation functions
   const handleSearchClick = () => {
     if (searchBarRef.current) {
       searchBarRef.current.focus();
@@ -47,7 +53,7 @@ const Navbar = () => {
   const handleLogout = async () => {
     try {
       await firebase.auth().signOut();
-      navigation.push('/login'); // Redirect to login after logout
+      navigate('/login');
     } catch (error) {
       console.error('Logout error:', error.message);
     }
@@ -80,10 +86,12 @@ const Navbar = () => {
         {user ? (
           <div className="d-block">
             <div className="nav-login-btn">
-              <span>{user.displayName}</span> (assuming displayName exists)
+              <div className='username-logout-wrapper'>
+              <span className='text-white'>{username}</span>
               <button id="logoutbtn" onClick={handleLogout}>
-                <FontAwesomeIcon icon={faSignOutAlt} />
+                <FontAwesomeIcon className='text-white' icon={faSignOutAlt} />
               </button>
+              </div>
             </div>
           </div>
         ) : (
@@ -140,7 +148,7 @@ const Navbar = () => {
                       <p className='nav-link'>Categories</p>
                     </li>
                     <li className={`nav-item ${activeNavItem === 'about' ? 'active' : ''}`}>
-                      <NavLink to="/about" className='nav-link' activeClassName="active">About</NavLink>
+                      <NavLink to="/admin/controller" className='nav-link' activeClassName="active">Admin Panel</NavLink>
                     </li>
                     <li className={`nav-item ${activeNavItem === 'search' ? 'active' : ''}`} onClick={handleSearchClick}>
                       <p className='nav-link'>Search</p>

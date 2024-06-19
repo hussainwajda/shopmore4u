@@ -112,21 +112,41 @@ body {
 .sidebar.open {
   transform: translateX(0);
 }
+.content-container {
+  padding: 20px;
+  margin-left: 200px;
+  width: calc(100% - 200px);
+  transition: margin-left 0.3s ease-in-out;
+}
 
 @media (max-width: 768px) {
+  .toggle-btn {
+    display: block;
+  }
+
   .sidebar {
-    transform: translateX(-200px);
+    transform: translateX(-100%);
+  }
+
+  .sidebar.closed {
+    transform: translateX(-100%);
   }
 
   .sidebar.open {
     transform: translateX(0);
   }
 
-  .toggle-btn {
-    display: block;
+  .content-container {
+    padding: 10px;
+    margin-left:20px;
+    width: 100%; /* Reset the margin when sidebar is closed */
   }
 
-  .sidebar-container {
-    margin-left: 0;
+  .content-container.sidebar-open {
+    margin-left: 200px; /* Adjust the margin when sidebar is open */
   }
+}
+
+.app-container {
+  display: flex; 
 }
