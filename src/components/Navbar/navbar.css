@@ -207,4 +207,11 @@ body {
     align-items: center;
     gap: 10px; /* Adjust the value to your preference */
   }
+
+  #logoutbtn{
+    color: #ffffff;
+  }
+  #logoutbtn:hover{
+    color: red;
+  }
   

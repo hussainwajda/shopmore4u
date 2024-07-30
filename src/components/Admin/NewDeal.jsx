@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Container, Row, Col, Form, Button, Card } from 'react-bootstrap';
+import { Container, Form, Button, Card } from 'react-bootstrap';
 import axios from 'axios';
 import firebase from '../firebaseInit'; 
 
@@ -17,10 +17,12 @@ function NewDeal() {
       setStatus('Generating link...');
       const idToken = await firebase.auth().currentUser.getIdToken(true);
       console.log(idToken);
+      // server host id = https://shopmore4u.webwhizinfosys.com
       const response = await axios.post('http://localhost:5000/generate-link', 
         { url: link },
         {
           headers: {
+            'Content-Type': 'application/json',
             Authorization: `Bearer ${idToken}` 
           }
         }
@@ -37,6 +39,21 @@ function NewDeal() {
   };
 
   const handleCopy = (url) => {
+    if (!navigator.clipboard) {
+      // Fallback method for copying text
+      const textArea = document.createElement('textarea');
+      textArea.value = url;
+      document.body.appendChild(textArea);
+      textArea.select();
+      try {
+        document.execCommand('copy');
+        alert('URL copied to clipboard');
+      } catch (err) {
+        console.error('Fallback: Oops, unable to copy', err);
+      }
+      document.body.removeChild(textArea);
+      return;
+    }
     navigator.clipboard.writeText(url).then(() => {
       alert('URL copied to clipboard');
     });

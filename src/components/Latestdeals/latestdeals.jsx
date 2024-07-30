@@ -12,6 +12,7 @@ export default function LatestDeals() {
   	const [totalProducts, setTotalProducts] = useState(0);
 	const fetchProducts = async () => {
 		try {
+      // https://shopmore4u.webwhizinfosys.com
 			const response = await axios.get(`http://localhost:5000/products?page=${currentPage}&limit=${PRODUCTS_PER_PAGE}`);
 			setProducts(response.data.products);
 			setTotalProducts(response.data.total);
@@ -39,6 +40,7 @@ export default function LatestDeals() {
 
 
   return (
+    <div className="container-login100">
     <section className="section-products">
       <div className="container">
         <div className="row justify-content-center text-center">
@@ -82,5 +84,6 @@ export default function LatestDeals() {
         </div>
       </div>
     </section>
+  </div> 
   )
 }

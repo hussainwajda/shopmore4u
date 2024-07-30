@@ -8,6 +8,8 @@ body {
 .topcat-container {
     font-family: "Poppins", sans-serif;
     margin-top: 50px;
+    margin-bottom: 50px;
+    padding-left: 100px;
     color: #000000;
 }
 
@@ -21,7 +23,7 @@ body {
 
 @media screen and (max-width: 500px){
     .topcat-container {
-        margin-top: 10px;
         padding-left: 50px;
+        margin-bottom: 50px;
     }
 }

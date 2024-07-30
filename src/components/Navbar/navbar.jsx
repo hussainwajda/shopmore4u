@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { NavLink, Link, useNavigate } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faUser, faHeart, faShoppingCart, faSignOutAlt } from '@fortawesome/free-solid-svg-icons';
+import { faUser, faHeart, faShoppingCart, faSignOutAlt, faTimes, faBars } from '@fortawesome/free-solid-svg-icons';
 import logo from '../Assets/logo.png';
 import './navbar.css';
 import firebase from '../firebaseInit';
@@ -102,7 +102,7 @@ const Navbar = () => {
               <div className='username-logout-wrapper'>
               <span className='text-white'>{username}</span>
               <button id="logoutbtn" onClick={handleLogout}>
-                <FontAwesomeIcon className='text-white' icon={faSignOutAlt} />
+                <FontAwesomeIcon icon={faSignOutAlt} />
               </button>
               </div>
             </div>
@@ -149,7 +149,7 @@ const Navbar = () => {
             <div className="row justify-content-center">
               <div className="col-lg-12">
                 <button className="navbar-toggler" type="button" onClick={handleNavCollapse} aria-controls="navbarSupportedContent" aria-expanded={!isNavCollapsed} aria-label="Toggle navigation">
-                  <span className="navbar-toggler-icon"></span>
+                  {!isNavCollapsed ? <FontAwesomeIcon icon={faTimes} /> : <FontAwesomeIcon icon={faBars} />}
                 </button>
 
                 <div className={`collapse navbar-collapse ${!isNavCollapsed ? 'show' : ''}`} id="navbarSupportedContent">
@@ -157,7 +157,7 @@ const Navbar = () => {
                     <li className={`nav-item ${activeNavItem === null ? 'active' : ''}`}>
                       <NavLink to="/" className='nav-link'>Home</NavLink>
                     </li>
-                    <li className={`nav-item ${activeNavItem === 'categories' ? 'active' : ''}`} onClick={() => handleCategoriesClick(400)}>
+                    <li className={`nav-item ${activeNavItem === 'categories' ? 'active' : ''}`} onClick={() => handleCategoriesClick(5800)}>
                       <p className='nav-link'>Categories</p>
                     </li>
                     {username && (<li className={`nav-item ${activeNavItem === 'about' ? 'active' : ''}`}>

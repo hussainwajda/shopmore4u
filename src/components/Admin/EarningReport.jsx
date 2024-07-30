@@ -1,9 +1,8 @@
 import React from 'react'
 
-function EarningReport() {
+export default function EarningReport() {
   return (
     <div>EarningReport</div>
   )
 }
 
-export default EarningReport

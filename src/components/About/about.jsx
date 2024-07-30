@@ -14,9 +14,11 @@ const logoStyle = {
 
 export default function Footer() {
   return (
+    
    <Container
    sx={{
     background: '#254E70', 
+    borderRadius: '30px',
   }}
    > 
     <Container

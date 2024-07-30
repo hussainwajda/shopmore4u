@@ -3,6 +3,8 @@
     width: 90%; /* Make it responsive to screen width */
     max-width: 800px; /* Limit maximum width for larger screens */
     margin: 0 auto;
+    margin-bottom: 50px;
+    margin-top: 50px;
     padding: 20px;
     border: 1px solid #ddd;
     border-radius: 8px;
@@ -45,18 +47,18 @@
   
   /* Shop Now Button */
   .shop-now-button {
-    background-color: #007bff; /* Or your desired button color */
-    color: white;
     padding: 10px 20px;
+    background-color: #37718E;
+    color: #fff;
     border: none;
+    font-weight: bold;
     border-radius: 5px;
+    margin-left: 10px;
     cursor: pointer;
-    font-size: 1rem;
-    transition: background-color 0.3s;
-  }
+}
   
   .shop-now-button:hover {
-    background-color: #0056b3; /* Slightly darker on hover */
+    background-color: #8EE3EF;
   }
   
   
@@ -76,4 +78,19 @@
       text-align: left; /* Align price and button to the left */
     }
   }
+
+
+    /* Responsive Adjustments */
+    @media (max-width: 568px) {
+      .responsive-heading{
+        font-size: 1rem;
+        font-weight: normal;
+      }
+      .desc{
+          font-size: 0.8rem;
+      }
+
+      
+    }
+    
   

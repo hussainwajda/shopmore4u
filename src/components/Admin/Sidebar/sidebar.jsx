@@ -5,6 +5,7 @@ import { Link } from 'react-router-dom';
 import NewDeal from '../NewDeal';
 import AmazonLinks from '../AmazonLinks';
 import firebase from '../../firebaseInit'; 
+import EarningReport from '../EarningReport';
 
 const Sidebar = () => {
   const [startAnimate, setStartAnimate] = useState(false);
@@ -59,7 +60,7 @@ const Sidebar = () => {
       case 3:
         return <div>Coming soon....</div>;
       case 4:
-        return <div>Coming soon....</div>;
+        return <EarningReport />;
       case 5:
         return isAdmin ? <div>Coming Soon....</div> : null; 
       default:

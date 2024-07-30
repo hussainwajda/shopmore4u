@@ -5,6 +5,7 @@ import { Button, Modal } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import firebase from '../firebaseInit';
 
+
 export default function AmazonLinks() {
   const [showModal, setShowModal] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState(null);
@@ -19,6 +20,7 @@ export default function AmazonLinks() {
     if (user) {
       setUsername(user);
       try {
+          // https://shopmore4u.webwhizinfosys.com
           const response = await axios.get(`http://localhost:5000/products/${user}`);
           console.log(response.data);
           setProducts(response.data.sort((a, b) => new Date(b.created) - new Date(a.created)));
@@ -43,7 +45,7 @@ useEffect(() => {
 const handleDelete = async (product) => {
   try {
     const idToken = await firebase.auth().currentUser.getIdToken(true);
-    await axios.delete(`http://103.93.16.46:6200/products/${product.productId}`, {
+    await axios.delete(`https://localhost:5000/products/${product.productId}`, {
       headers: {
         Authorization: `Bearer ${idToken}`,
       },
@@ -56,7 +58,7 @@ const handleDelete = async (product) => {
 };
 
   return (
-    <div className="container py-4">
+    <div className="container py-4" id='main-content'>
       <header className="d-flex justify-content-between align-items-center mb-4">
         <h1 className="h4">Welcome, {username} Jii</h1>
         <button className="btn btn-primary" onClick={() => fetchProducts(username)}>Refresh</button>
@@ -150,6 +152,19 @@ const handleDelete = async (product) => {
           </Button>
         </Modal.Footer>
       </Modal>
+      <style jsx>{`
+        @media (max-width: 768px) { 
+  
+    .table th, .table td {
+      font-size: 6px;
+    } .table td button{
+      font-size: 6px;
+      }
+  } 
+    section {
+      overflow-x: hidden; 
+    }
+      `}</style>
       </section>
     </div>
   );

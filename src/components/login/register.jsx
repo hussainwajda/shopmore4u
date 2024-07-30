@@ -5,7 +5,7 @@ import './login.css';
 import './util.css';
 import logo from './images/img-01.png';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faLock, faEnvelope, faUser, faLongArrowAltRight } from '@fortawesome/free-solid-svg-icons';
+import { faLock, faEnvelope, faUser, faLongArrowAltRight, faTag } from '@fortawesome/free-solid-svg-icons';
 import { Link } from 'react-router-dom';
 
 function Register() {
@@ -14,6 +14,7 @@ function Register() {
 
   const [formData, setFormData] = useState({
     username: '',
+    tag: '',
     email: '',
     password: ''
   });
@@ -29,7 +30,7 @@ function Register() {
   const handleRegister = async (e) => {
     e.preventDefault();
     try { 
-      const { email, password, username } = formData;
+      const { email, password, username, tag } = formData;
       const userCredential = await auth.createUserWithEmailAndPassword(email, password);
       
       // User registered successfully
@@ -39,6 +40,7 @@ function Register() {
       await db.collection("users").doc(userCredential.user.uid).set({
         username: username,
         email: email,
+        tag: tag
       });
 
       alert('User Registered Successfully!');
@@ -72,6 +74,20 @@ function Register() {
               <span className="focus-input100"></span>
               <span className="symbol-input100">
                 <FontAwesomeIcon icon={faUser} />
+              </span>
+            </div>
+            <div className="wrap-input100 validate-input" data-validate="Valid email is required: ex@abc.xyz">
+              <input 
+                className="input100" 
+                type="text" 
+                name="tag" 
+                value={formData.tag} 
+                onChange={handleChange} 
+                placeholder="Tag" 
+              />
+              <span className="focus-input100"></span>
+              <span className="symbol-input100">
+                <FontAwesomeIcon icon={faTag} />
               </span>
             </div>
             <div className="wrap-input100 validate-input" data-validate="Valid email is required: ex@abc.xyz">
