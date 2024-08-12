@@ -6,6 +6,7 @@ import NewDeal from '../NewDeal';
 import AmazonLinks from '../AmazonLinks';
 import firebase from '../../firebaseInit'; 
 import EarningReport from '../EarningReport';
+import AdminPanel from '../admin';
 
 const Sidebar = () => {
   const [startAnimate, setStartAnimate] = useState(false);
@@ -62,7 +63,7 @@ const Sidebar = () => {
       case 4:
         return <EarningReport />;
       case 5:
-        return isAdmin ? <div>Coming Soon....</div> : null; 
+        return isAdmin ? <AdminPanel /> : null; 
       default:
         return null;
     }
@@ -99,10 +100,10 @@ const Sidebar = () => {
         </a>
         {isAdmin && (
         <a className={currCount === 5 ? 'active' : ''} href="#" onClick={() => onClickTab(5)}>
-          <span className={currCount === 5 ? 'text-active' : ''}><i className="fas fa-arrow-right"></i>Exclusive deals</span>
+          <span className={currCount === 5 ? 'text-active' : ''}><i className="fas fa-arrow-right"></i>Admin Panel</span>
         </a>
       )}
-        <Link className={currCount === 5 ? 'active' : ''} to="/" onClick={() => onClickTab(5)}>
+        <Link className={currCount === 5 ? 'active' : ''} to="/" onClick={() => onClickTab(6)}>
           <span className={currCount === 5 ? 'text-active' : ''}><i className="fas fa-arrow-right"></i>Back To Home</span>
         </Link>
       </div>

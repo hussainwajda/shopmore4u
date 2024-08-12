@@ -5,6 +5,7 @@ import Topcat from '../Topcat/topcat';
 import LatestDeals from '../Latestdeals/latestdeals';
 
 import './index.css';
+import AdsenseComponent from '../adSense';
 function index() {
   return (
     <>
@@ -12,6 +13,7 @@ function index() {
         <LatestDeals />
         {/* <Poster /> */}      
           <Topcat />
+          <AdsenseComponent />
         {/* <PopularProducts /> */}
         
     </>

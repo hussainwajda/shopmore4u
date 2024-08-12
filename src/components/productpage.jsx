@@ -5,6 +5,7 @@ import { faLongArrowAltDown } from '@fortawesome/free-solid-svg-icons';
 import axios from 'axios';
 import Helmet from 'react-helmet';
 import './productpage.css';
+import AdsenseComponent from './adSense';
 
 const ProductPage = () => {
     const { productId} = useParams();
@@ -15,7 +16,7 @@ const ProductPage = () => {
         const fetchProduct = async () => {
             try {
                 // server host id = https://shopmore4u.webwhizinfosys.com
-                const response = await axios.get(`http://localhost:5000/product/${productId}`);
+                const response = await axios.get(`https://shopmore4u.webwhizinfosys.com/product/${productId}`);
                 setProduct(response.data);
             } catch (error) {
                 console.error('Error fetching product:', error);
@@ -61,6 +62,7 @@ const ProductPage = () => {
         </div>
         <p className='desc'>{product.description}</p>
       </div>
+      <AdsenseComponent />
     </div>
     );
 };

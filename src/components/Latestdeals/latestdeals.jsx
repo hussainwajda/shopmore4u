@@ -13,7 +13,7 @@ export default function LatestDeals() {
 	const fetchProducts = async () => {
 		try {
       // https://shopmore4u.webwhizinfosys.com
-			const response = await axios.get(`http://localhost:5000/products?page=${currentPage}&limit=${PRODUCTS_PER_PAGE}`);
+			const response = await axios.get(`https://shopmore4u.webwhizinfosys.com/products?page=${currentPage}&limit=${PRODUCTS_PER_PAGE}`);
 			setProducts(response.data.products);
 			setTotalProducts(response.data.total);
 		} catch (error) {

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import { Container, Form, Button, Card } from 'react-bootstrap';
+import { Container, Form, Button, Card, Modal } from 'react-bootstrap';
 import axios from 'axios';
-import firebase from '../firebaseInit'; 
+import firebase from '../firebaseInit';
 
 function NewDeal() {
   const [link, setLink] = useState('');
@@ -10,16 +10,37 @@ function NewDeal() {
   const [affiliateUrl, setAffiliateUrl] = useState('');
   const [status, setStatus] = useState('N/A');
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  const [showBulkModal, setShowBulkModal] = useState(false);
+  const [bulkLinks, setBulkLinks] = useState(['']);
+  const [bulkResults, setBulkResults] = useState([]);
 
+  const handleSubmit = async (e) => {
+    setStatus('Generating link...');
+    e.preventDefault();
+    const result = await generateLink(link);
+    if (result && !result.error) {
+      setShortUrl(result.shortLink);
+      setLongUrl(result.longLink);
+      setAffiliateUrl(result.affiliateLink);
+      setStatus('Link generated successfully!');
+    } else {
+      setStatus(result.error);
+    }
+  };
+
+  const handleBulkSubmit = async () => {
+    setStatus('Generating links...');
+    const results = await Promise.all(bulkLinks.map(link => generateLink(link)));
+    setBulkResults(results.filter(result => !result.error));
+    setShowBulkModal(false);
+    setStatus('Links generated successfully!');
+  };
+
+  const generateLink = async (url) => {
     try {
-      setStatus('Generating link...');
       const idToken = await firebase.auth().currentUser.getIdToken(true);
-      console.log(idToken);
-      // server host id = https://shopmore4u.webwhizinfosys.com
-      const response = await axios.post('http://localhost:5000/generate-link', 
-        { url: link },
+      const response = await axios.post('https://shopmore4u.webwhizinfosys.com/generate-link', 
+        { url },
         {
           headers: {
             'Content-Type': 'application/json',
@@ -28,36 +49,23 @@ function NewDeal() {
         }
       );
       const { shortLink, longLink, affiliateLink } = response.data;
-      setShortUrl(shortLink);
-      setLongUrl(longLink);
-      setAffiliateUrl(affiliateLink);
-      setStatus('Link generated successfully!');
+      return { shortLink, longLink, affiliateLink };
     } catch (error) {
       console.error(error);
-      setStatus('Failed to generate link');
+      return { error: 'Failed to generate link' };
     }
   };
 
   const handleCopy = (url) => {
-    if (!navigator.clipboard) {
-      // Fallback method for copying text
-      const textArea = document.createElement('textarea');
-      textArea.value = url;
-      document.body.appendChild(textArea);
-      textArea.select();
-      try {
-        document.execCommand('copy');
-        alert('URL copied to clipboard');
-      } catch (err) {
-        console.error('Fallback: Oops, unable to copy', err);
-      }
-      document.body.removeChild(textArea);
-      return;
-    }
     navigator.clipboard.writeText(url).then(() => {
       alert('URL copied to clipboard');
+    }).catch(err => {
+      console.error('Failed to copy: ', err);
     });
   };
+
+  const handleAddLink = () => setBulkLinks([...bulkLinks, '']);
+  const handleRemoveLink = (index) => setBulkLinks(bulkLinks.filter((_, i) => i !== index));
 
   return (
     <Container>
@@ -91,9 +99,55 @@ function NewDeal() {
       </Card>
 
       <div className="d-flex justify-content-center">
-        <Button variant="success" className="me-2" onClick={() => handleCopy(shortUrl)}>Copy Short URL</Button>
-        <Button variant="danger" onClick={() => handleCopy(longUrl)}>Copy Long URL</Button>
+        <Button variant="outline-success" className="me-2" onClick={() => handleCopy(shortUrl)}>Copy Short URL</Button>
+        <Button variant="outline-danger" className="me-2" onClick={() => handleCopy(longUrl)}>Copy Long URL</Button>
+        <Button variant='outline-primary' onClick={() => setShowBulkModal(true)}>Generate Multiple Links</Button>
       </div>
+
+      <Modal show={showBulkModal} onHide={() => setShowBulkModal(false)}>
+        <Modal.Header closeButton>
+          <Modal.Title>Generate Multiple Links</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          {bulkLinks.map((link, index) => (
+            <Form.Group key={index} className="mb-3">
+              <Form.Label>Link {index + 1}</Form.Label>
+              <Form.Control 
+                type="text" 
+                value={link} 
+                onChange={(e) => {
+                  const newLinks = [...bulkLinks];
+                  newLinks[index] = e.target.value;
+                  setBulkLinks(newLinks);
+                }} 
+              />
+              <Button variant="outline-danger" className="mt-2" onClick={() => handleRemoveLink(index)}>Remove</Button>
+            </Form.Group>
+          ))}
+          <Button variant="outline-success" onClick={handleAddLink}>Add Another Link</Button>
+        </Modal.Body>
+        <Modal.Footer>
+          <button className='btn btn-outline-danger' onClick={() => setShowBulkModal(false)}>Close</button>
+          <button className='btn btn-outline-primary' onClick={handleBulkSubmit}>Generate Links</button>
+        </Modal.Footer>
+      </Modal>
+
+      <Modal show={bulkResults.length > 0} onHide={() => setBulkResults([])}>
+        <Modal.Header closeButton>
+          <Modal.Title>Generated Links</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          {bulkResults.map((result, index) => (
+            <div key={index} className="d-flex justify-content-between mb-3">
+              <span>{result.shortLink}</span>
+              <Button variant="outline-success" onClick={() => handleCopy(result.shortLink)}>Copy</Button>
+            </div>
+          ))}
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={() => setBulkResults([])}>Close</Button>
+        </Modal.Footer>
+      </Modal>
 
       <style jsx>{`
         .bullet {

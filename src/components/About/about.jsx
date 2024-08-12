@@ -105,13 +105,13 @@ export default function Footer() {
           <Typography variant="body2" fontWeight={600} color='#8EE3EF'>
             Company
           </Typography>
-          <Link color='#fffff' href="#">
+          <Link color='#ffffff' href="#">
             About us
           </Link>
-          <Link color='#fffff' href="#">
+          <Link color='#ffffff' href="#">
             Careers
           </Link>
-          <Link color='#fffff' href="#">
+          <Link color='#ffffff' href="#">
             Press
           </Link>
         </Box>
@@ -125,13 +125,13 @@ export default function Footer() {
           <Typography variant="body2" fontWeight={600} color='#8EE3EF'>
             Legal
           </Typography>
-          <Link color='#fffff' href="#">
+          <Link color='#ffffff' href="#">
             Terms
           </Link>
-          <Link color='#fffff' href="#">
+          <Link color='#ffffff' href="#">
             Privacy
           </Link>
-          <Link color='#fffff' href="#">
+          <Link color='#ffffff' href="#">
             Contact
           </Link>
         </Box>

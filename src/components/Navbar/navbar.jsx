@@ -161,7 +161,7 @@ const Navbar = () => {
                       <p className='nav-link'>Categories</p>
                     </li>
                     {username && (<li className={`nav-item ${activeNavItem === 'about' ? 'active' : ''}`}>
-                      <NavLink to="/admin/controller" className='nav-link' activeClassName="active">Admin Panel</NavLink>
+                      <NavLink to="/admin/controller" className='nav-link' activeClassName="active">Dashboard</NavLink>
                     </li>)}
                     <li className={`nav-item ${activeNavItem === 'search' ? 'active' : ''}`} onClick={handleSearchClick}>
                       <p className='nav-link'>Search</p>

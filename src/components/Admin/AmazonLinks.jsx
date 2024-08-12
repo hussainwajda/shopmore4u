@@ -4,168 +4,184 @@ import getUserName from '../Navbar/getUsername';
 import { Button, Modal } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import firebase from '../firebaseInit';
-
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faSync } from '@fortawesome/free-solid-svg-icons';
+import './componentstyle.css';
 
 export default function AmazonLinks() {
   const [showModal, setShowModal] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [username, setUsername] = useState('');
   const [products, setProducts] = useState([]);
-  const [totalProducts, settotalProducts] = useState(0);
+  const [totalProducts, setTotalProducts] = useState(0);
   const [todayDeals, setTodayDeals] = useState(0);
-
+  const [searchTerm, setSearchTerm] = useState('');
+  const [currentPage, setCurrentPage] = useState(1);
+  const [filteredData, setFilteredData] = useState([]);
+  const entriesPerPage = 10;
 
   async function fetchProducts() {
     const user = await getUserName();
     if (user) {
       setUsername(user);
       try {
-          // https://shopmore4u.webwhizinfosys.com
-          const response = await axios.get(`http://localhost:5000/products/${user}`);
-          console.log(response.data);
-          setProducts(response.data.sort((a, b) => new Date(b.created) - new Date(a.created)));
-          settotalProducts(products.length);
-          const today = new Date();
-          const todayStart = new Date(today.getFullYear(), today.getMonth(), today.getDate());
-          const todayDealsCount = products.filter(product => new Date(product.created) >= todayStart).length;
-          setTodayDeals(todayDealsCount);
-        } catch (error) {
-          console.error(error);
+        const response = await axios.get(`https://shopmore4u.webwhizinfosys.com/products/${user}`);
+        setProducts(response.data.sort((a, b) => new Date(b.created) - new Date(a.created)));
+        setTotalProducts(response.data.length);
+        const today = new Date();
+        const todayStart = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+        const todayDealsCount = response.data.filter(product => new Date(product.created) >= todayStart).length;
+        setTodayDeals(todayDealsCount);
+      } catch (error) {
+        console.error(error);
       }
-  } else {
+    } else {
       setUsername('');
-      setProducts([]); // Clear products when not logged in
+      setProducts([]);
+    }
   }
-}
 
-useEffect(() => {
+  useEffect(() => {
     fetchProducts();
-});
+  }, []);
 
-const handleDelete = async (product) => {
-  try {
-    const idToken = await firebase.auth().currentUser.getIdToken(true);
-    await axios.delete(`https://localhost:5000/products/${product.productId}`, {
-      headers: {
-        Authorization: `Bearer ${idToken}`,
-      },
-    });
-    setProducts(products.filter((p) => p.productId !== product.productId));
-    setShowModal(false);
-  } catch (error) {
-    console.error('Error deleting product:', error);
-  }
-};
+  useEffect(() => {
+    setFilteredData(
+      products.filter(product =>
+        product.title.toLowerCase().includes(searchTerm.toLowerCase())
+      )
+    );
+  }, [searchTerm, products]);
+
+  const handleSearch = (e) => {
+    setSearchTerm(e.target.value);
+    setCurrentPage(1);
+  };
+
+  const indexOfLastEntry = currentPage * entriesPerPage;
+  const indexOfFirstEntry = indexOfLastEntry - entriesPerPage;
+  const currentEntries = filteredData.slice(indexOfFirstEntry, indexOfLastEntry);
+
+  const totalPages = Math.ceil(filteredData.length / entriesPerPage);
+
+  const paginate = (pageNumber) => setCurrentPage(pageNumber);
+
+  const handleDelete = async (product) => {
+    try {
+      const idToken = await firebase.auth().currentUser.getIdToken(true);
+      await axios.delete(`https://shopmore4u.webwhizinfosys.com/products/${product.productId}`, {
+        headers: {
+          Authorization: `Bearer ${idToken}`,
+        },
+      });
+      setProducts(products.filter((p) => p.productId !== product.productId));
+      setShowModal(false);
+    } catch (error) {
+      console.error('Error deleting product:', error);
+    }
+  };
 
   return (
-    <div className="container py-4" id='main-content'>
-      <header className="d-flex justify-content-between align-items-center mb-4">
-        <h1 className="h4">Welcome, {username} Jii</h1>
-        <button className="btn btn-primary" onClick={() => fetchProducts(username)}>Refresh</button>
-      </header>
-
-      <section className="mb-4">
-        <h2 className="h5 mb-3">Amazon Deals History</h2>
-        <div className="d-flex">
-          <div className="flex-fill p-3 bg-light rounded shadow-sm mr-3">
-            <h3 className="h6">Total Deals</h3>
-            <div className="mt-2 p-3 bg-secondary text-white rounded">
-              <p>{totalProducts}</p>
+    <div className="container">
+      <div className="row">
+        <div className="col-md-offset-1 col-md-12">
+          <div className="panel">
+            <div className="panel-heading">
+              <div className="row">
+                <div className="col col-sm-3 col-xs-12">
+                  <h4 className="title">Amazon <span>Links</span></h4>
+                </div>
+                <div className="col-sm-9 col-xs-12 text-right">
+                  <div className="btn_group">
+                    <input type="text" className="form-control" placeholder="Search" value={searchTerm} onChange={handleSearch} />
+                    <button className="btn btn-default" title="Reload" onClick={fetchProducts}><FontAwesomeIcon icon={faSync}/></button>
+                  </div>
+                </div>
+              </div>
+              <div className="row summary-boxes">
+                <div className="col-md-6 col-sm-6">
+                  <div className="summary-box">
+                    <h4>Total Deals</h4>
+                    <p>{totalProducts}</p>
+                  </div>
+                </div>
+                <div className="col-md-6 col-sm-6">
+                  <div className="summary-box">
+                    <h4>Today Amazon Deals</h4>
+                    <p>{todayDeals}</p>
+                  </div>
+                </div>
+              </div>
             </div>
-          </div>
-          <div className="flex-fill p-3 bg-light rounded shadow-sm">
-            <h3 className="h6">Today Amazon Deals</h3>
-            <div className="mt-2 p-3 bg-secondary text-white rounded">
-              <p>{todayDeals}</p>
+            <div className="panel-body table-responsive">
+              <table className="table">
+                <thead>
+                  <tr>
+                    <th>Brand</th>
+                    <th>Title</th>
+                    <th>Category</th>
+                    <th>Created</th>
+                    <th>Username</th>
+                    <th>URLs</th>
+                    <th className="text-danger">Del</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {currentEntries.map((product, index) => (
+                    <tr key={index}>
+                      <td>{product.brand}</td>
+                      <td>{product.title}</td>
+                      <td>{product.category}</td>
+                      <td>{new Date(product.created).toLocaleString()}</td>
+                      <td>{product.username}</td>
+                      <td>
+                        <button className="btn btn-outline-primary btn-sm mr-2 mb-2 rounded" onClick={() => {navigator.clipboard.writeText(product.shortLink+"/"+product.title); alert("Long URL copied to clipboard!");}}> Long</button>
+                        <button className="btn btn-outline-secondary btn-sm" onClick={() => {navigator.clipboard.writeText(product.shortLink); alert("short URL copied to clipboard!");}}>Short</button>
+                      </td>
+                      <td md={2} className="text-end">
+                        <button className='btn-danger' variant="outline-danger" onClick={() => {
+                          setSelectedProduct(product);
+                          setShowModal(true);
+                        }}>
+                          🗑️
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
             </div>
+            <div className="panel-footer">
+              <div className="row">
+                <div className="col col-sm-6 col-xs-6">showing <b>{currentEntries.length}</b> out of <b>{products.length}</b> entries</div>
+                <div className="col-sm-6 col-xs-6">
+                  <ul className="pagination hidden-xs pull-right">
+                    {[...Array(totalPages)].map((_, i) => (
+                      <li key={i} className={currentPage === i + 1 ? 'active' : ''}>
+                        <a onClick={() => paginate(i + 1)}>{i + 1}</a>
+                      </li>
+                    ))}
+                  </ul>
+                  <ul className="pagination visible-xs pull-right">
+                    <li><a onClick={() => paginate(currentPage - 1)}>&lt;</a></li>
+                    <li><a onClick={() => paginate(currentPage + 1)}>&gt;</a></li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+            <Modal show={showModal} onHide={() => setShowModal(false)}>
+              <Modal.Header closeButton>
+                <Modal.Title>Confirm Delete</Modal.Title>
+              </Modal.Header>
+              <Modal.Body>Are you sure you want to delete this product?</Modal.Body>
+              <Modal.Footer>
+                <Button variant="secondary" onClick={() => setShowModal(false)}>No</Button>
+                <Button variant="danger" onClick={() => handleDelete(selectedProduct)}>Yes</Button>
+              </Modal.Footer>
+            </Modal>
           </div>
         </div>
-      </section>
-
-      <section className="bg-light p-4 rounded shadow-sm">
-        <div className="d-flex justify-content-between align-items-center mb-3">
-          <div className="d-flex align-items-center">
-            <label htmlFor="entries" className="mr-2">Show</label>
-            <select id="entries" className="form-control form-control-sm mr-2">
-              <option value="10">10</option>
-              <option value="25">25</option>
-              <option value="50">50</option>
-              <option value="100">100</option>
-            </select>
-            <span>entries</span>
-          </div>
-          <div className="d-flex align-items-center">
-            <label htmlFor="search" className="mr-2">Search:</label>
-            <input id="search" type="text" className="form-control form-control-sm" />
-          </div>
-        </div>
-        <table className="table table-bordered">
-          <thead className="thead-light">
-            <tr>
-              <th>Brand</th>
-              <th>Title</th>
-              <th>Category</th>
-              <th>Created</th>
-              <th>Username</th>
-              <th>URLs</th>
-              <th className='text-danger'>Del</th>
-            </tr>
-          </thead>
-          <tbody>
-            {products.map((product, index) => (
-              <tr key={index}>
-                <td>{product.brand}</td>
-                <td>{product.title}</td>
-                <td>{product.category}</td>
-                <td>{new Date(product.created).toLocaleString()}</td>
-                <td>{product.username}</td>
-                <td>
-                  <button className="btn btn-danger btn-sm mr-2" onClick={() => navigator.clipboard.writeText(product.originalLink)}>Copy long URL</button>
-                  <button className="btn btn-primary btn-sm" onClick={() => navigator.clipboard.writeText(product.shortLink)}>Copy short URL</button>
-                </td>
-                <td md={2} className="text-end">
-                <button className='btn-danger'
-                  variant="outline-danger"
-                  onClick={() => {
-                    setSelectedProduct(product);
-                    setShowModal(true);
-                  }}
-                >
-                  🗑️
-                </button>
-              </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-        <Modal show={showModal} onHide={() => setShowModal(false)}>
-        <Modal.Header closeButton>
-          <Modal.Title>Confirm Delete</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>Are you sure you want to delete this product?</Modal.Body>
-        <Modal.Footer>
-          <Button variant="secondary" onClick={() => setShowModal(false)}>
-            No
-          </Button>
-          <Button variant="danger" onClick={() => handleDelete(selectedProduct)}>
-            Yes
-          </Button>
-        </Modal.Footer>
-      </Modal>
-      <style jsx>{`
-        @media (max-width: 768px) { 
-  
-    .table th, .table td {
-      font-size: 6px;
-    } .table td button{
-      font-size: 6px;
-      }
-  } 
-    section {
-      overflow-x: hidden; 
-    }
-      `}</style>
-      </section>
+      </div>
     </div>
   );
 }
