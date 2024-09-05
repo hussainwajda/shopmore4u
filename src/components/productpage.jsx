@@ -3,9 +3,10 @@ import { useParams } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faLongArrowAltDown } from '@fortawesome/free-solid-svg-icons';
 import axios from 'axios';
-import Helmet from 'react-helmet';
+import {Helmet} from 'react-helmet';
 import './productpage.css';
 import AdsenseComponent from './adSense';
+
 
 const ProductPage = () => {
     const { productId} = useParams();
@@ -16,7 +17,7 @@ const ProductPage = () => {
         const fetchProduct = async () => {
             try {
                 // server host id = https://shopmore4u.webwhizinfosys.com
-                const response = await axios.get(`https://shopmore4u.webwhizinfosys.com/product/${productId}`);
+                const response = await axios.get(`http://localhost:5000/product/${productId}`);
                 setProduct(response.data);
             } catch (error) {
                 console.error('Error fetching product:', error);
@@ -30,20 +31,25 @@ const ProductPage = () => {
     if (error) return <div>{error}</div>;
     if (!product) return <div>Loading...</div>;
 
-  const metaTags = [
-    { name: 'og:title', content: product.title },
-    { name: 'og:description', content: product.description.substring(0, 20) }, // Truncate description for preview
-    { name: 'og:image', content: product.imageUrl },
-    { name: 'og:url', content: window.location.href },
-  ];
+    const truncatedDescription = product.description.length > 160 
+    ? product.description.substring(0, 157) + '...'
+    : product.description;
     
+    const metaTags = [
+      { property: 'og:title', content: product.title },
+      { property: 'og:description', content: product.description.substring(0, 30) }, // Adjust description length
+      { property: 'og:image', content: product.imageUrl },
+      { property: 'og:url', content: window.location.href },
+      { property: 'og:type', content: 'product' },
+    ];
+
     return (
       <div className="product-container">
-      <Helmet>
+        <Helmet>
         {metaTags.map((meta) => (
           <meta key={meta.name} {...meta} />
         ))}
-      </Helmet>
+        </Helmet>
       <div className="product-content">
         <h2 className='responsive-heading'>{product.title}</h2>
         <div className="image-details">

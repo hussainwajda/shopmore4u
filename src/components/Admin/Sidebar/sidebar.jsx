@@ -7,6 +7,7 @@ import AmazonLinks from '../AmazonLinks';
 import firebase from '../../firebaseInit'; 
 import EarningReport from '../EarningReport';
 import AdminPanel from '../admin';
+import OrderReport from '../OrderReport';
 
 const Sidebar = () => {
   const [startAnimate, setStartAnimate] = useState(false);
@@ -61,8 +62,10 @@ const Sidebar = () => {
       case 3:
         return <div>Coming soon....</div>;
       case 4:
-        return <EarningReport />;
+        return <OrderReport />;  
       case 5:
+        return <EarningReport />;
+      case 6:
         return isAdmin ? <AdminPanel /> : null; 
       default:
         return null;
@@ -96,15 +99,18 @@ const Sidebar = () => {
           <span className={currCount === 3 ? 'text-active' : ''}><i className="fas fa-arrow-right"></i>Payment Portal</span>
         </a>
         <a className={currCount === 4 ? 'active' : ''} href="#" onClick={() => onClickTab(4)}>
-          <span className={currCount === 4 ? 'text-active' : ''}><i className="fas fa-arrow-right"></i>Earning Report</span>
+          <span className={currCount === 4 ? 'text-active' : ''}><i className="fas fa-arrow-right"></i>Order Report</span>
+        </a>
+        <a className={currCount === 5 ? 'active' : ''} href="#" onClick={() => onClickTab(5)}>
+          <span className={currCount === 5 ? 'text-active' : ''}><i className="fas fa-arrow-right"></i>Earning Report</span>
         </a>
         {isAdmin && (
-        <a className={currCount === 5 ? 'active' : ''} href="#" onClick={() => onClickTab(5)}>
-          <span className={currCount === 5 ? 'text-active' : ''}><i className="fas fa-arrow-right"></i>Admin Panel</span>
+        <a className={currCount === 6 ? 'active' : ''} href="#" onClick={() => onClickTab(6)}>
+          <span className={currCount === 6 ? 'text-active' : ''}><i className="fas fa-arrow-right"></i>Admin Panel</span>
         </a>
       )}
-        <Link className={currCount === 5 ? 'active' : ''} to="/" onClick={() => onClickTab(6)}>
-          <span className={currCount === 5 ? 'text-active' : ''}><i className="fas fa-arrow-right"></i>Back To Home</span>
+        <Link className={currCount === 7 ? 'active' : ''} to="/" onClick={() => onClickTab(7)}>
+          <span className={currCount === 7 ? 'text-active' : ''}><i className="fas fa-arrow-right"></i>Back To Home</span>
         </Link>
       </div>
       <div className={`content-container ${isOpen ? 'sidebar-open' : ''}`}>

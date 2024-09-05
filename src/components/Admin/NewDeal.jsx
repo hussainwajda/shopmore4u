@@ -9,6 +9,8 @@ function NewDeal() {
   const [longUrl, setLongUrl] = useState('');
   const [affiliateUrl, setAffiliateUrl] = useState('');
   const [status, setStatus] = useState('N/A');
+  // const [error, setError] = useState('');
+  const [excludedProductError, setExcludedProductError] = useState('');
 
   const [showBulkModal, setShowBulkModal] = useState(false);
   const [bulkLinks, setBulkLinks] = useState(['']);
@@ -17,16 +19,24 @@ function NewDeal() {
   const handleSubmit = async (e) => {
     setStatus('Generating link...');
     e.preventDefault();
+    try{
     const result = await generateLink(link);
     if (result && !result.error) {
       setShortUrl(result.shortLink);
       setLongUrl(result.longLink);
       setAffiliateUrl(result.affiliateLink);
       setStatus('Link generated successfully!');
-    } else {
-      setStatus(result.error);
-    }
-  };
+    } else if(result.error && result.message.includes('Amazon Associates Program Excluded Products')){
+      setStatus("Failed To Generate The Link!!!");
+      setExcludedProductError(result.message);
+    }else{
+      setStatus("Failed To Generate The Link!!!");
+    };
+  }catch(err) {
+    setStatus("Failed To Generate The Link!!!");
+    setExcludedProductError('');
+  }  
+};
 
   const handleBulkSubmit = async () => {
     setStatus('Generating links...');
@@ -39,7 +49,7 @@ function NewDeal() {
   const generateLink = async (url) => {
     try {
       const idToken = await firebase.auth().currentUser.getIdToken(true);
-      const response = await axios.post('https://shopmore4u.webwhizinfosys.com/generate-link', 
+      const response = await axios.post('https://server.shopmore4u.in/generate-link', 
         { url },
         {
           headers: {
@@ -53,8 +63,8 @@ function NewDeal() {
     } catch (error) {
       console.error(error);
       return { error: 'Failed to generate link' };
-    }
-  };
+  }
+};
 
   const handleCopy = (url) => {
     navigator.clipboard.writeText(url).then(() => {
@@ -95,6 +105,7 @@ function NewDeal() {
 
           <h5 className="mb-2">Status: {status}</h5>
           <Button className="gnrtlnk" type="submit">Generate Link</Button>
+          {excludedProductError && <p style={{ color: 'orange' }}>{excludedProductError}</p>}
         </Form>
       </Card>
 

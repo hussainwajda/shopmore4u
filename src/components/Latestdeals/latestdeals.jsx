@@ -10,10 +10,12 @@ export default function LatestDeals() {
 	const [products,setProducts] = useState([]);
 	const [currentPage, setCurrentPage] = useState(1);
   	const [totalProducts, setTotalProducts] = useState(0);
+    const serverLink = "https://server.shopmore4u.in";
+    const serverLinkLocal = "http://localhost:5000"
 	const fetchProducts = async () => {
 		try {
       // https://shopmore4u.webwhizinfosys.com
-			const response = await axios.get(`https://shopmore4u.webwhizinfosys.com/products?page=${currentPage}&limit=${PRODUCTS_PER_PAGE}`);
+			const response = await axios.get(`${serverLinkLocal}/products?page=${currentPage}&limit=${PRODUCTS_PER_PAGE}`);
 			setProducts(response.data.products);
 			setTotalProducts(response.data.total);
 		} catch (error) {

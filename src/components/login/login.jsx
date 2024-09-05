@@ -1,12 +1,13 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import firebase from '../firebaseInit';   
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import './login.css';
 import './util.css';
 import logo from './images/img-01.png';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faLock, faEnvelope } from '@fortawesome/free-solid-svg-icons';
 import { Link } from 'react-router-dom';
+import AdsenseComponent from '../adSense';
 
 function Login() {
   const auth = firebase.auth();
@@ -15,6 +16,7 @@ function Login() {
     password: ''
   });
   const navigate = useNavigate();
+  const { chatId } = useParams(); // Get chatId from URL if it exists
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -28,10 +30,32 @@ function Login() {
     e.preventDefault();
     try {
       const { email, password } = formData;
-      await auth.signInWithEmailAndPassword(email, password);
+      const userCredential = await auth.signInWithEmailAndPassword(email, password);
+      const user = userCredential.user;
       console.log('User logged in successfully');
-      // Redirect to desired page after successful login
-      navigate("/admin/controller"); // Example: Redirect to dashboard
+
+      if (chatId) {
+        // This is a Telegram login
+        const idToken = await user.getIdToken(true);
+        
+        // Store the chatId in Firestore
+        await firebase.firestore().collection('users').doc(user.uid).set({
+          telegramChatId: chatId
+        }, { merge: true });
+
+        // Notify the server about successful Telegram login
+        await fetch('https://server.shopmore4u.in/telegram-login-success', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ chatId, idToken })
+        });
+        alert('LOGIN SUCCESSFUL!!!!, Go back To Bot for Generating Links');
+        // Close the window and redirect back to Telegram
+        window.close();
+      } else {
+        // Regular login, redirect to admin controller
+        navigate("/admin/controller");
+      }
     } catch (error) {
       console.error('Login error:', error.message);
       alert(error.message);
@@ -39,6 +63,7 @@ function Login() {
   };
 
   return (
+  <>  
     <div className="limiter">
       <div className="container-login100">
         <div className="wrap-login100">
@@ -47,7 +72,7 @@ function Login() {
           </div>
           <form className="login100-form validate-form" onSubmit={handleLogin}>
             <span className="login100-form-title">
-              Admin Login
+              {chatId ? 'Telegram Login' : 'Admin Login'}
             </span>
             <div className="wrap-input100 validate-input" data-validate="Valid email is required: ex@abc.xyz">
               <input 
@@ -82,24 +107,30 @@ function Login() {
                 Login
               </button>
             </div>
-            <div className="text-center p-t-12">
-              <span className="txt1">
-                Forgot
-              </span>
-              <Link className="txt2" to="/resetpassword">
-                Username / Password?
-              </Link>
-            </div>
-            <div className="text-center p-t-136">
-              <Link className="txt2" to="/register">
-                Create your Account
-                <i className="fa fa-long-arrow-right m-l-5" aria-hidden="true"></i>
-              </Link>
-            </div>
+            {!chatId && (
+              <>
+                <div className="text-center p-t-12">
+                  <span className="txt1">
+                    Forgot
+                  </span>
+                  <Link className="txt2" to="/resetpassword">
+                    Username / Password?
+                  </Link>
+                </div>
+                <div className="text-center p-t-136">
+                  <Link className="txt2" to="/register">
+                    Create your Account
+                    <i className="fa fa-long-arrow-right m-l-5" aria-hidden="true"></i>
+                  </Link>
+                </div>
+              </>
+            )}
           </form>
         </div>
       </div>
     </div>
+    <AdsenseComponent />
+  </>  
   );
 }
 

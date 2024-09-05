@@ -11,7 +11,7 @@ import ProductPage from './components/productpage.jsx';
 // Import your content components
 import NewDeal from './components/Admin/NewDeal'; // Adjust path as needed
 import AmazonLinks from './components/Admin/AmazonLinks';
-import OtherLinks from './components/Admin/OtherLinks.jsx';
+import OtherLinks from './components/Admin/OrderReport.jsx';
 import PaymentPortal from './components/Admin/PaymentPortal';
 import EarningReport from './components/Admin/EarningReport';
 import Register2 from './components/login/register2.jsx';
@@ -35,6 +35,7 @@ function App() {
             <Route path="/product/:productId" element={<ProductPage />} />
             <Route path="/product/:productId/:title" element={<ProductPage />} />
             <Route path="/login" element={<Login />} />
+            <Route path="/login/:chatId?" element={<Login />} />
             <Route path="/register" element={<Register2 />} />
             <Route path='/resetpassword' element={<Resetpassword />} />
             <Route path="/admin/register" element={<Register />} />

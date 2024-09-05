@@ -25,7 +25,8 @@ export default function AmazonLinks() {
     if (user) {
       setUsername(user);
       try {
-        const response = await axios.get(`https://shopmore4u.webwhizinfosys.com/products/${user}`);
+        // server host id = https://shopmore4u.webwhizinfosys.com
+        const response = await axios.get(`https://server.shopmore4u.in/products/${user}`);
         setProducts(response.data.sort((a, b) => new Date(b.created) - new Date(a.created)));
         setTotalProducts(response.data.length);
         const today = new Date();
@@ -69,7 +70,7 @@ export default function AmazonLinks() {
   const handleDelete = async (product) => {
     try {
       const idToken = await firebase.auth().currentUser.getIdToken(true);
-      await axios.delete(`https://shopmore4u.webwhizinfosys.com/products/${product.productId}`, {
+      await axios.delete(`https://server.shopmore4u.in/products/${product.productId}`, {
         headers: {
           Authorization: `Bearer ${idToken}`,
         },

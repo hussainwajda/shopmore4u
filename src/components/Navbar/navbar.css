@@ -159,6 +159,7 @@ body {
       height: 40px;
   }.nav-login-btn a{
       padding-left: 20px;
+      font-size: 10px;
   }
   .nav-dropdown {
     padding: 10px;
