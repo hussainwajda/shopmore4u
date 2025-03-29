@@ -39,7 +39,7 @@ const OrderReport = () => {
     if (tagID) {
       const fetchOrders = async () => {
         try {
-          const response = await axios.get(`http://localhost:5000/orders/${tagID}`);
+          const response = await axios.get(`https://server.shopmore4u.com/orders/${tagID}`);
           const data = await response.data;
           setOrders(data);
           setLoading(false);

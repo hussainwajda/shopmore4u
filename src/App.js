@@ -18,6 +18,8 @@ import Register2 from './components/login/register2.jsx';
 import Resetpassword from './components/login/resetpassword.jsx';
 import About from './components/About/about.jsx';
 
+import { Helmet } from 'react-helmet';
+
 function App() {
   return (
     <div>
@@ -34,6 +36,15 @@ function App() {
             <Route path="/" element={<Home />} />
             <Route path="/product/:productId" element={<ProductPage />} />
             <Route path="/product/:productId/:title" element={<ProductPage />} />
+            <Route path="/meta/product/:productId">
+                    {({ match }) => (
+                        <Helmet>
+                            {/* Use the PHP file for social media crawling */}
+                            <meta name="robots" content="noindex, follow" />
+                            <meta http-equiv="refresh" content={`0;url=https://server.shopmore4u.com/product-meta.php?productId=${match.params.productId}`} />
+                        </Helmet>
+                    )}
+            </Route>
             <Route path="/login" element={<Login />} />
             <Route path="/login/:chatId?" element={<Login />} />
             <Route path="/register" element={<Register2 />} />

@@ -19,7 +19,7 @@ const AdminPanel = () => {
   useEffect(() => {
     const fetchUploadHistory = async () => {
       try {
-        const response = await fetch('http://localhost:5000/upload-history');
+        const response = await fetch('https://server.shopmore4u.com/upload-history');
         const data = await response.json();
         setUploadHistory(data);
       } catch (error) {
@@ -46,7 +46,7 @@ const AdminPanel = () => {
     formData.append('tagID', tagID);
 
     try {
-      await axios.post('http://localhost:5000/upload', formData, {
+      await axios.post('https://server.shopmore4u.com/upload', formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
@@ -62,7 +62,7 @@ const AdminPanel = () => {
     if (!selectedEntry) return;
 
     try {
-      await axios.delete(`http://localhost:5000/upload-history/${selectedEntry._id}`);
+      await axios.delete(`https://server.shopmore4u.com/upload-history/${selectedEntry._id}`);
       setUploadHistory(uploadHistory.filter(entry => entry._id !== selectedEntry._id));
       setShowModal(false);
       alert('File entry deleted successfully');

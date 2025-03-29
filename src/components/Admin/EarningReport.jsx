@@ -44,7 +44,7 @@ const EarningsReport = () => {
     if (tagID) {
       const fetchEarnings = async () => {
         try {
-          const response = await fetch(`http://localhost:5000/earnings/${tagID}`);
+          const response = await fetch(`https://server.shopmore4u.com/earnings/${tagID}`);
           const data = await response.json();
           console.log('Raw API response:', data);
           if (Array.isArray(data) && data.length > 0) {

@@ -49,7 +49,7 @@ function NewDeal() {
   const generateLink = async (url) => {
     try {
       const idToken = await firebase.auth().currentUser.getIdToken(true);
-      const response = await axios.post('https://server.shopmore4u.in/generate-link', 
+      const response = await axios.post('https://server.shopmore4u.com/generate-link', 
         { url },
         {
           headers: {

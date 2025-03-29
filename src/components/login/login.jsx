@@ -44,7 +44,7 @@ function Login() {
         }, { merge: true });
 
         // Notify the server about successful Telegram login
-        await fetch('https://server.shopmore4u.in/telegram-login-success', {
+        await fetch('https://server.shopmore4u.com/telegram-login-success', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ chatId, idToken })
